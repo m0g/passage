@@ -30,6 +30,7 @@
   "dependencies": {
     "keypair": "^1.0.1",
     "react": "16.0.0",
-    "react-native": "0.50.3"
+    "react-native": "0.50.3",
+    "react-native-qrcode": "^0.2.6"
   }
 }
