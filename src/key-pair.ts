@@ -1,5 +1,6 @@
 import {AsyncStorage} from 'react-native';
 import keypair from 'keypair';
+import shajs from 'sha.js';
 
 export default class KeyPair {
   constructor() {
@@ -7,23 +8,32 @@ export default class KeyPair {
 
   generate() {
     const pair = keypair();
+    const hashId = shajs('sha256').update(pair.public).digest('hex');
 
     return AsyncStorage
-      .multiSet([['@Passage:privateKey', pair.private], ['@Passage:publicKey', pair.public]])
-      .then(() => pair.public);
+      .multiSet([
+        ['@Passage:privateKey', pair.private],
+        ['@Passage:publicKey', pair.public],
+        ['@Passage:hashId', hashId]
+      ])
+      .then(() => hashId);
   }
 
-  getPub() {
-    return AsyncStorage.getItem('@Passage:publicKey')
-      .then(pubKey => {
-        if (pubKey)
-          return pubKey;
+  getHashId() {
+    return AsyncStorage.getItem('@Passage:hashId')
+      .then(hashId => {
+        if (hashId)
+          return hashId;
         else
           return this.generate();
       });
   }
 
   flush() {
-    return AsyncStorage.multiRemove(['@Passage:privateKey', '@Passage:publicKey']);
+    return AsyncStorage.multiRemove([
+      '@Passage:privateKey',
+      '@Passage:publicKey',
+      '@Passage:hashId'
+    ]);
   }
 }

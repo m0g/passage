@@ -5,7 +5,7 @@ import QRCode from 'react-native-qrcode';
 import KeyPair from './key-pair';
 
 interface State {
-  pair: { pubKey: string };
+  hashId: string;
 }
 
 export default class App extends React.Component<State> {
@@ -14,28 +14,28 @@ export default class App extends React.Component<State> {
   constructor(props) {
     super(props);
 
-    this.state = { pair: { pubKey: '' } };
+    this.state = { hashId: '' };
   }
 
   componentDidMount() {
+    const keyPair = new KeyPair();
     let state = this.state;
 
-    const keyPair = new KeyPair();
-    //keyPair.flush();
-
-    keyPair.getPub().then(pubKey => {
-      console.log(pubKey);
-      state.pair.pubKey = pubKey;
+    keyPair.getHashId().then(hashId => {
+      console.log(hashId);
+      state.hashId = hashId;
       this.setState(state);
     });
+
+    //keyPair.flush();
   }
 
   render() {
     let code = <Text>Loading...</Text>;
 
-    if (this.state.pair.pubKey.length > 0) {
+    if (this.state.hashId.length > 0) {
       code = (<QRCode
-        value={this.state.pair.pubKey}
+        value={this.state.hashId}
         size={200}
         bgColor='purple'
         fgColor='white'/>);
