@@ -1,10 +1,11 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import keypair from 'keypair';
 import QRCode from 'react-native-qrcode';
 
+import KeyPair from './key-pair';
+
 interface State {
-  pair: { public: string, private: string };
+  pair: { pubKey: string };
 }
 
 export default class App extends React.Component<State> {
@@ -13,21 +14,37 @@ export default class App extends React.Component<State> {
   constructor(props) {
     super(props);
 
-    const pair = keypair();
-    console.log(pair);
-    this.state = { pair: pair };
+    this.state = { pair: { pubKey: '' } };
+  }
+
+  componentDidMount() {
+    let state = this.state;
+
+    const keyPair = new KeyPair();
+    //keyPair.flush();
+
+    keyPair.getPub().then(pubKey => {
+      console.log(pubKey);
+      state.pair.pubKey = pubKey;
+      this.setState(state);
+    });
   }
 
   render() {
+    let code = <Text>Loading...</Text>;
+
+    if (this.state.pair.pubKey.length > 0) {
+      code = (<QRCode
+        value={this.state.pair.pubKey}
+        size={200}
+        bgColor='purple'
+        fgColor='white'/>);
+    }
+
     return (
       <View style={styles.container}>
         <Text>Welcome to Passage.</Text>
-        <QRCode
-          value={this.state.pair.public}
-          size={200}
-          bgColor='purple'
-          fgColor='white'/>
-        <Text>{this.state.pair.public}</Text>
+        {code}
       </View>
     );
   }
