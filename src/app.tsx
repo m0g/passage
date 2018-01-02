@@ -1,8 +1,13 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import QRCode from 'react-native-qrcode';
+import dgram from 'react-native-udp';
 
 import KeyPair from './key-pair';
+
+function randomPort() {
+  return Math.random() * 60536 | 0 + 5000 // 60536-65536
+}
 
 interface State {
   hashId: string;
@@ -28,6 +33,19 @@ export default class App extends React.Component<State> {
     });
 
     //keyPair.flush();
+
+    let a = dgram.createSocket('udp4');
+    let aPort = randomPort();
+
+    a.bind(aPort, function(err) {
+      if (err) throw err;
+      console.log(err);
+    })
+
+    a.on('listening', () => {
+      const address = a.address();
+      console.log(`server listening ${address.address}:${address.port}`);
+    });
   }
 
   render() {

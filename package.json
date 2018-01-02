@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "devDependencies": {
-    "@types/jest": "^21.1.8",
+    "@types/jest": "22.0.0",
     "@types/react": "^16.0.31",
     "@types/react-native": "^0.51.3",
     "babel-preset-react-native-stage-0": "^1.0.1",
@@ -30,19 +30,13 @@
   },
   "dependencies": {
     "assert": "^1.4.1",
-    "browserify-zlib": "^0.1.4",
-    "console-browserify": "^1.1.0",
-    "constants-browserify": "^1.0.0",
     "dns.js": "^1.0.1",
-    "domain-browser": "^1.1.7",
     "events": "^1.1.1",
-    "https-browserify": "0.0.1",
     "keypair": "^1.0.1",
-    "path-browserify": "0.0.0",
     "process": "^0.11.10",
     "querystring-es3": "^0.2.1",
     "react": "16.0.0",
-    "react-native": "0.50.3",
+    "react-native": "0.51.0",
     "react-native-http": "github:tradle/react-native-http#834492d",
     "react-native-level-fs": "^3.0.0",
     "react-native-os": "^1.1.0",
@@ -51,12 +45,8 @@
     "react-native-udp": "^2.3.1",
     "readable-stream": "^1.0.33",
     "sha.js": "^2.4.9",
-    "stream-browserify": "^1.0.0",
-    "timers-browserify": "^1.4.2",
-    "tty-browserify": "0.0.0",
     "url": "^0.10.3",
-    "util": "^0.10.3",
-    "vm-browserify": "0.0.4"
+    "util": "^0.10.3"
   },
   "react-native": {
     "zlib": "browserify-zlib",
@@ -108,6 +98,7 @@
     "timers": "timers-browserify",
     "tty": "tty-browserify",
     "vm": "vm-browserify",
-    "tls": false
+    "tls": false,
+    "dgram": "react-native-udp"
   }
 }
