@@ -23,6 +23,7 @@
     "tsc": "tsc",
     "clean": "rimraf artifacts",
     "build": "npm run clean && npm run tsc --",
+    "apk": "cd android && ./gradlew assembleRelease",
     "lint": "tslint src/**/*.ts"
   },
   "jest": {
