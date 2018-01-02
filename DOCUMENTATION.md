@@ -20,6 +20,9 @@ Upon firing the app for the time, a pair of private/public keys as well as a has
 ### Peer discovery
 Peer discovery (or bootstrapping node) will be in a first time designed around a peer discovery server. Each node upon getting online will announce itself to the CENTRAL peer discover server by sending its current address and port alongside a timestamp.
 
+#### LAN discovery
+Before attempting to find peers over the internet, passage will first attempt to find node over the LAN network.
+
 ### Direct/synchronous communication between nodes
 If node A wants to communicate to node B and they are both available at the same time on the network, they will be able to communicate directly to each other via a WebRTC connection using end-to-end encryption.
 
