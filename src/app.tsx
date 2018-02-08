@@ -1,11 +1,6 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import Zeroconf from 'react-native-zeroconf'
-//import KeyPair from './key-pair';
-
-//function randomPort() {
-//  return Math.random() * 60536 | 0 + 5000 // 60536-65536
-//}
 
 interface State {
   hashId: string;
@@ -45,23 +40,11 @@ export default class App extends React.Component<State> {
     zeroconf.on('start', () => {
       console.log('The scan has started.', zeroconf.getServices())
     });
-    //zeroconf.on('update', () => console.log('Update'));
-    //zeroconf.on('found', data => console.log('found', data));
     zeroconf.on('resolved', this.onDeviceResolved.bind(this));
     zeroconf.on('error', data => console.log('error', data));
   }
 
   render() {
-    //let code = <Text>Loading...</Text>;
-
-    //if (this.state.hashId.length > 0) {
-    //  code = (<QRCode
-    //    value={this.state.hashId}
-    //    size={200}
-    //    bgColor='purple'
-    //    fgColor='white'/>);
-    //}
-
     return (
       <View style={styles.container}>
         <Text>Welcome to Passage.</Text>
