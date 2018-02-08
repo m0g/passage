@@ -1,8 +1,6 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-//import QRCode from 'react-native-qrcode';
-import dgram from 'react-native-udp';
-
+import Zeroconf from 'react-native-zeroconf'
 //import KeyPair from './key-pair';
 
 //function randomPort() {
@@ -12,6 +10,7 @@ import dgram from 'react-native-udp';
 interface State {
   hashId: string;
   listening: string;
+  devices: {host: string}[];
 }
 
 export default class App extends React.Component<State> {
@@ -20,33 +19,28 @@ export default class App extends React.Component<State> {
   constructor(props) {
     super(props);
 
-    this.state = { hashId: '', listening: '' };
+    this.state = { hashId: '', listening: '', devices: [] };
+  }
+
+  onDeviceResolved(data) {
+    console.log('resolved', data)
+
+    let state = this.state;
+    state.devices.push(data);
+    this.setState(state);
   }
 
   componentDidMount() {
-    //const keyPair = new KeyPair();
-
-    //keyPair.flush();
-    //keyPair.getHashId().then(hashId => {
-    //  let state = this.state;
-    //  console.log(hashId);
-    //  state.hashId = hashId;
-    //  this.setState(state);
-    //});
-
-    let a = dgram.createSocket('udp4');
-    //let aPort = randomPort();
-
-    //console.log(aPort);
-    a.bind(7053);
-
-    a.on('listening', (err) => {
-      console.log(err);
-      const address = a.address();
-      let state = this.state;
-      state.listening = `server listening ${address.address}:${address.port}`;
-      this.setState(state);
+    const zeroconf = new Zeroconf()
+    zeroconf.register();
+    zeroconf.scan();
+    zeroconf.on('start', () => {
+      console.log('The scan has started.', zeroconf.getServices())
     });
+    //zeroconf.on('update', () => console.log('Update'));
+    //zeroconf.on('found', data => console.log('found', data));
+    zeroconf.on('resolved', this.onDeviceResolved.bind(this));
+    zeroconf.on('error', data => console.log('error', data));
   }
 
   render() {
@@ -65,6 +59,9 @@ export default class App extends React.Component<State> {
         <Text>Welcome to Passage.</Text>
         {code}
         <Text>{this.state.listening}</Text>
+        {this.state.devices.map((device, i) =>
+          <Text key={i}>{device.host}</Text>
+        )}
       </View>
     );
   }
