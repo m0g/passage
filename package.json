@@ -24,26 +24,28 @@
     "clean": "rimraf artifacts",
     "build": "npm run clean && npm run tsc --",
     "apk": "cd android && ./gradlew assembleRelease",
-    "lint": "tslint src/**/*.ts"
+    "lint": "tslint src/**/*.ts",
+    "housekeeping": "react-native link && react-native upgrade"
   },
   "jest": {
     "preset": "jest-expo"
   },
   "dependencies": {
     "assert": "^1.4.1",
+    "buffer": "^5.0.8",
     "dns.js": "^1.0.1",
     "events": "^1.1.1",
     "keypair": "^1.0.1",
     "process": "^0.11.10",
     "querystring-es3": "^0.2.1",
     "react": "16.0.0",
-    "react-native": "0.52.0",
+    "react-native": "0.53.0",
     "react-native-http": "github:tradle/react-native-http#834492d",
     "react-native-level-fs": "^3.0.0",
     "react-native-os": "^1.1.0",
     "react-native-qrcode": "^0.2.6",
     "react-native-tcp": "^3.3.0",
-    "react-native-udp": "^2.3.1",
+    "react-native-zeroconf": "github:m0g/react-native-zeroconf#53d7fa1",
     "readable-stream": "^1.0.33",
     "sha.js": "^2.4.9",
     "url": "^0.10.3",
@@ -99,7 +101,6 @@
     "timers": "timers-browserify",
     "tty": "tty-browserify",
     "vm": "vm-browserify",
-    "tls": false,
-    "dgram": "react-native-udp"
+    "tls": false
   }
 }

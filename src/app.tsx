@@ -24,10 +24,18 @@ export default class App extends React.Component<State> {
 
   onDeviceResolved(data) {
     console.log('resolved', data)
-
+    let isExisting = false;
     let state = this.state;
-    state.devices.push(data);
-    this.setState(state);
+
+    state.devices.forEach(device => {
+      if (device.host === data.host)
+        isExisting = true;
+    });
+
+    if (!isExisting) {
+      state.devices.push(data);
+      this.setState(state);
+    }
   }
 
   componentDidMount() {
@@ -44,7 +52,7 @@ export default class App extends React.Component<State> {
   }
 
   render() {
-    let code = <Text>Loading...</Text>;
+    //let code = <Text>Loading...</Text>;
 
     //if (this.state.hashId.length > 0) {
     //  code = (<QRCode
@@ -57,7 +65,6 @@ export default class App extends React.Component<State> {
     return (
       <View style={styles.container}>
         <Text>Welcome to Passage.</Text>
-        {code}
         <Text>{this.state.listening}</Text>
         {this.state.devices.map((device, i) =>
           <Text key={i}>{device.host}</Text>
