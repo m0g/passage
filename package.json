@@ -13,7 +13,7 @@
     "rimraf": "^2.6.2",
     "rn-nodeify": "github:tradle/rn-nodeify",
     "tslint": "^5.8.0",
-    "typescript": "^2.6.2"
+    "typescript": "^2.8.0-dev.20180209"
   },
   "scripts": {
     "start": "react-native start",
@@ -28,6 +28,7 @@
     "housekeeping": "react-native link && react-native upgrade",
     "fix-rn-os": "cat node_modules/react-native-os/android/src/main/java/com/peel/react/RNOSModule.java | sed -e '31{/@Override/d;}' > RNOSModule.tmp.java && mv RNOSModule.tmp.java node_modules/react-native-os/android/src/main/java/com/peel/react/RNOSModule.java",
     "adb-uninstall": "adb uninstall com.passage",
+    "preadb-install": "npm run adb-uninstall",
     "adb-install": "adb install ./android/app/build/outputs/apk/app-release.apk"
   },
   "jest": {
@@ -43,6 +44,7 @@
     "querystring-es3": "^0.2.1",
     "react": "16.0.0",
     "react-native": "0.53.0",
+    "react-native-device-info": "^0.15.1",
     "react-native-http": "github:tradle/react-native-http#834492d",
     "react-native-level-fs": "^3.0.0",
     "react-native-os": "^1.1.0",
