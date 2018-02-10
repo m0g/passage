@@ -28,7 +28,7 @@
     "housekeeping": "react-native link && react-native upgrade",
     "fix-rn-os": "cat node_modules/react-native-os/android/src/main/java/com/peel/react/RNOSModule.java | sed -e '31{/@Override/d;}' > RNOSModule.tmp.java && mv RNOSModule.tmp.java node_modules/react-native-os/android/src/main/java/com/peel/react/RNOSModule.java",
     "adb-uninstall": "adb uninstall com.passage",
-    "preadb-install": "npm run adb-uninstall",
+    "preadb-install": "npm run apk && npm run adb-uninstall",
     "adb-install": "adb install ./android/app/build/outputs/apk/app-release.apk"
   },
   "jest": {
