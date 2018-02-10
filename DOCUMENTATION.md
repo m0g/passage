@@ -27,6 +27,9 @@ Peer discovery (or bootstrapping node) will be in a first time designed around a
 #### LAN discovery
 Before attempting to find peers over the internet, passage will first attempt to find node over the LAN network.
 
+#### Peer communication
+All peers should communicate via TCP
+
 ### Direct/synchronous communication between nodes
 If node A wants to communicate to node B and they are both available at the same time on the network, they will be able to communicate directly to each other via a WebRTC connection using end-to-end encryption.
 
@@ -36,3 +39,13 @@ Upon joining the network user B will broadcast a message, looking for any new me
 Once the message has been retrieved, it will be deleted from the network and decrypted by user B.
 
 ## Technical stack
+
+### GIT Repositories
+
+* `passage-core`: Decentralized and distributed messaging protocol written in Typescript
+
+* `passage-mobile`: React native mobile application for android & ios
+
+* `passage-desktop`:Cross platform desktop client written in electron.js
+
+* `passage-networking`: Set of low level android & ios rect-native API for networking (TCP/UDP/NsdManager)
