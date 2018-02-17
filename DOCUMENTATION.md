@@ -27,11 +27,8 @@ Peer discovery (or bootstrapping node) will be in a first time designed around a
 #### LAN discovery
 Before attempting to find peers over the internet, passage will first attempt to find node over the LAN network.
 
-#### Peer communication
-All peers should communicate via TCP
-
 ### Direct/synchronous communication between nodes
-If node A wants to communicate to node B and they are both available at the same time on the network, they will be able to communicate directly to each other via a WebRTC connection using end-to-end encryption.
+If node A wants to communicate to node B and they are both available at the same time on the network, they will be able to communicate directly to each other via TCP using end-to-end encryption.
 
 ### Indirect/asynchronous communication between nodes
 If user A wants to communicate with user B, however the latter is currently not online, we will rely on a distributed hash table (DHT) storing the encrypted sent message on the network via a key value store, the key will in this case be the public key of the recipient of the message (in this case user B). 
@@ -39,6 +36,9 @@ Upon joining the network user B will broadcast a message, looking for any new me
 Once the message has been retrieved, it will be deleted from the network and decrypted by user B.
 
 ## Technical stack
+
+### Storage
+Local storage of messages, dht nodes, groups...  should be stored in a SQLite database.
 
 ### GIT Repositories
 
