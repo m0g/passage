@@ -12,6 +12,7 @@ import com.facebook.react.modules.core.DeviceEventManagerModule;
 import org.whispersystems.libsignal.util.KeyHelper;
 import org.whispersystems.libsignal.IdentityKeyPair;
 import org.whispersystems.libsignal.IdentityKey;
+import com.facebook.react.bridge.Promise;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -52,9 +53,9 @@ public class SignalProtocolModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public IdentityKey generateIdentityKeyPair () {
+    public void generateIdentityKeyPair (final Promise promise) {
       IdentityKeyPair keyPair = KeyHelper.generateIdentityKeyPair();
-      return keyPair.getPublicKey();
+      promise.resolve(keyPair.getPublicKey().getFingerprint());
     }
 
     @ReactMethod

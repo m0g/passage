@@ -10,6 +10,7 @@ export default {
   },
 
   generateIdentityKeyPair() {
+		console.log('sp', SignalProtocol.generateIdentityKeyPair());
     return SignalProtocol.generateIdentityKeyPair();
   },
 
