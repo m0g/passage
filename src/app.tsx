@@ -1,6 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import Networking from './networking';
+import SignalProtocol from './../SignalProtocolNativeModule';
 
 import Peer from './interfaces/peer';
 
@@ -30,6 +31,10 @@ export default class App extends React.Component<State> {
 
     networking.discover();
     networking.onPeersFound = this.onPeerFound.bind(this);
+
+    console.log('key pair', SignalProtocol.generateIdentityKeyPair());
+    console.log('registration id', SignalProtocol.generateRegistrationId());
+
   }
 
   render() {
