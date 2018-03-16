@@ -39,10 +39,9 @@ export default class App extends React.Component<State> {
       Realm.open({
         schema: [{name: 'Identity', properties: {pubKey: 'string', privKey: 'string'}}]
       }).then(realm => {
-        console.log(realm);
-        //realm.write(() => {
-        //  realm.create('Identity', {pubKey: keys.public, privKey: keys.private});
-        //});
+        realm.write(() => {
+          realm.create('Identity', {pubKey: keys.public, privKey: keys.private});
+        });
       });
 
       console.log('Key pari', keys);
