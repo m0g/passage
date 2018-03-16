@@ -8,11 +8,14 @@ import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.WritableMap;
+import com.facebook.react.bridge.WritableNativeArray;
+import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
 import org.whispersystems.libsignal.util.KeyHelper;
 import org.whispersystems.libsignal.IdentityKeyPair;
 import org.whispersystems.libsignal.IdentityKey;
 import com.facebook.react.bridge.Promise;
+import org.whispersystems.libsignal.util.Hex;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -55,7 +58,15 @@ public class SignalProtocolModule extends ReactContextBaseJavaModule {
     @ReactMethod
     public void generateIdentityKeyPair (final Promise promise) {
       IdentityKeyPair keyPair = KeyHelper.generateIdentityKeyPair();
-      promise.resolve(keyPair.getPublicKey().getFingerprint());
+      WritableArray arr = new WritableNativeArray();
+
+      arr.pushString(keyPair.getPublicKey().getFingerprint());
+      arr.pushString(Hex.toString(keyPair.getPrivateKey().serialize()));
+
+      promise.resolve(arr);
+      //    keyPair.getPublicKey().getFingerprint(),
+      //    keyPair.getPrivateKey().getFingerprint()
+      //);
     }
 
     @ReactMethod

@@ -32,11 +32,12 @@ export default class App extends React.Component<State> {
     networking.discover();
     networking.onPeersFound = this.onPeerFound.bind(this);
 
-		SignalProtocol.generateIdentityKeyPair().then(pubKey => {
-			let state = this.state;
-			state.hashId = pubKey;
-			this.setState(state);
-		});
+    SignalProtocol.generateIdentityKeyPair().then(keys => {
+      console.log('Key pari', keys);
+      //let state = this.state;
+      //state.hashId = pubKey;
+      //this.setState(state);
+    });
 
     console.log('key pair', SignalProtocol.generateIdentityKeyPair());
     console.log('registration id', SignalProtocol.generateRegistrationId());
