@@ -5,9 +5,7 @@ import { NativeModules } from 'react-native'
 const { SignalProtocol } = NativeModules
 
 function bind2String(array) {
-  console.log('array', array);
   const hex = array.map(key => key.slice(6));
-  //return String.fromCharCode.apply(String, hex);
 
   let byteArray = '';
   for (var i=0; i < hex.length; i++) {

@@ -1,12 +1,14 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
+import QRCode from 'react-native-qrcode';
+
 import Networking from './networking';
 import SignalProtocol from './../SignalProtocolNativeModule';
-
 import Peer from './interfaces/peer';
 
 interface State {
-  hashId: string;
+  pubKey: string;
+  privKey: string;
   listening: string;
   peers: Peer[];
 }
@@ -17,7 +19,7 @@ export default class App extends React.Component<State> {
   constructor(props) {
     super(props);
 
-    this.state = { hashId: '', listening: '', peers: [] };
+    this.state = { pubKey: '', listening: '', peers: [] };
   }
 
   onPeerFound(peers) {
@@ -34,12 +36,12 @@ export default class App extends React.Component<State> {
 
     SignalProtocol.generateIdentityKeyPair().then(keys => {
       console.log('Key pari', keys);
-      //let state = this.state;
-      //state.hashId = pubKey;
-      //this.setState(state);
+      let state = this.state;
+      state.pubKey = keys.public;
+      state.privKey = keys.private;
+      this.setState(state);
     });
 
-    console.log('key pair', SignalProtocol.generateIdentityKeyPair());
     console.log('registration id', SignalProtocol.generateRegistrationId());
 
   }
@@ -49,8 +51,12 @@ export default class App extends React.Component<State> {
       <View style={styles.container}>
         <Text>Welcome to Passage.</Text>
         <Text>{this.state.listening}</Text>
-        <Text>Public key:</Text>
-        <Text>{this.state.hashId}</Text>
+        <Text>Public key: {this.state.pubKey}</Text>
+        <QRCode
+          value={this.state.pubKey}
+          size={200}
+          bgColor='purple'
+          fgColor='white'/>
         <Text>Peers:</Text>
         {this.state.peers.map((peer, i) =>
           <Text key={i}>{peer.host}</Text>
