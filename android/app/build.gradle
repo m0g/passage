@@ -148,6 +148,7 @@ android {
 }
 
 dependencies {
+    compile project(':realm')
     compile project(':react-native-device-info')
     compile project(':react-native-udp')
     compile project(':react-native-tcp')

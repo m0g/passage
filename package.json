@@ -55,6 +55,7 @@
     "react-native-webrtc": "^1.58.3",
     "react-native-zeroconf": "github:m0g/react-native-zeroconf#53d7fa1",
     "readable-stream": "^1.0.33",
+    "realm": "^2.3.1",
     "sha.js": "^2.4.9",
     "url": "^0.10.3",
     "util": "^0.10.3"
