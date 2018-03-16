@@ -64,14 +64,13 @@ public class SignalProtocolModule extends ReactContextBaseJavaModule {
       arr.pushString(Hex.toString(keyPair.getPrivateKey().serialize()));
 
       promise.resolve(arr);
-      //    keyPair.getPublicKey().getFingerprint(),
-      //    keyPair.getPrivateKey().getFingerprint()
-      //);
     }
 
     @ReactMethod
-    public int generateRegistrationId () {
-      return KeyHelper.generateRegistrationId(false);
+    public void generateRegistrationId (final Promise promise) {
+      int key = KeyHelper.generateRegistrationId(false);
+
+      promise.resolve(key);
     }
 
     private static void emitDeviceEvent(String eventName, @Nullable WritableMap eventData) {

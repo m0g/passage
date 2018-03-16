@@ -19,7 +19,7 @@ export default class App extends React.Component<State> {
   constructor(props) {
     super(props);
 
-    this.state = { pubKey: '', listening: '', peers: [] };
+    this.state = { pubKey: '', privKey: '', listening: '', peers: [] };
   }
 
   onPeerFound(peers) {
@@ -42,7 +42,9 @@ export default class App extends React.Component<State> {
       this.setState(state);
     });
 
-    console.log('registration id', SignalProtocol.generateRegistrationId());
+    SignalProtocol.generateRegistrationId().then(id => {
+      console.log('registration id', id);
+    });
 
   }
 
