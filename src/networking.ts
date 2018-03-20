@@ -82,31 +82,23 @@ export default class Networking {
 
   onDeviceResolved(data) {
 
-    console.log('msg send', this.isSocketBound, this.ip, data.addresses[0]);
     if (this.isSocketBound && this.ip !== data.addresses[0]) {
-      console.log('on device', data);
       this.addLocalPeer({ host: data.host, ip: data.addresses[0], port: data.port });
     }
 
-    console.log('resolved', data)
   }
 
   onMsgSent() {
-    console.log('MSG sent');
   }
 
   onReceivedMessage(msg, rinfo) {
     const decodedMsg = new Buffer(msg, 'hex').toString('utf8');
     const peer = this.getPeerFromHost(rinfo.address);
 
-    console.log('peer', peer, this.peers);
-    console.log('rinfo', rinfo, this.ip);
     ToastAndroid.show(`incoming ${rinfo.address} ${decodedMsg}`, ToastAndroid.SHORT);
 
     if (peer.host !== '' && this.ip !== peer.ip && decodedMsg === msgPassage) {
-      const isPeerExisting = this.addPassagePeer(peer);
-      console.log('is passage peer existing', isPeerExisting);
-
+      this.addPassagePeer(peer);
       this.onPeersFound(this.passagePeers);
     }
   }
@@ -130,7 +122,6 @@ export default class Networking {
 
     this.zeroconf.register();
     this.zeroconf.scan();
-    this.zeroconf.on('resolved', this.onDeviceResolved.bind(this));
     this.zeroconf.on('error', data => console.log('error', data));
 
     this.pingLocalPeers();

@@ -1,10 +1,10 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import QRCode from 'react-native-qrcode';
-import Realm from 'realm';
+//import Realm from 'realm';
 
 import Networking from './networking';
-import SignalProtocol from './../SignalProtocolNativeModule';
+import Identity from './identity';
 import Peer from './interfaces/peer';
 
 interface State {
@@ -31,30 +31,17 @@ export default class App extends React.Component<State> {
 
   componentDidMount() {
     const networking = new Networking();
+    const identity = new Identity();
 
-    networking.discover();
-    networking.onPeersFound = this.onPeerFound.bind(this);
-
-    SignalProtocol.generateIdentityKeyPair().then(keys => {
-      Realm.open({
-        schema: [{name: 'Identity', properties: {pubKey: 'string', privKey: 'string'}}]
-      }).then(realm => {
-        realm.write(() => {
-          realm.create('Identity', {pubKey: keys.public, privKey: keys.private});
-        });
-      });
-
-      console.log('Key pari', keys);
+    identity.get().then((id: { pubKey: string }) => {
+      console.log('identity get', id);
       let state = this.state;
-      state.pubKey = keys.public;
-      state.privKey = keys.private;
+      state.pubKey = id.pubKey;
       this.setState(state);
     });
 
-    SignalProtocol.generateRegistrationId().then(id => {
-      console.log('registration id', id);
-    });
-
+    networking.discover();
+    networking.onPeersFound = this.onPeerFound.bind(this);
   }
 
   render() {
