@@ -21,6 +21,7 @@
     "ios": "react-native run-ios",
     "test": "node node_modules/jest/bin/jest.js --watch",
     "tsc": "tsc",
+    "watch": "tsc --watch",
     "clean": "rimraf artifacts",
     "build": "npm run clean && npm run tsc --",
     "apk": "cd android && ./gradlew assembleRelease",

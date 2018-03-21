@@ -1,6 +1,6 @@
 import Realm from 'realm';
 
-import SignalProtocol from './../SignalProtocolNativeModule';
+import SignalProtocol from './signal-protocol-native-module';
 
 const identitySchema = {
   name: 'Identity',

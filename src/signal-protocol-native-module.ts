@@ -1,19 +1,18 @@
-//  Created by react-native-create-bridge
+import { NativeModules } from 'react-native';
 
-import { NativeModules } from 'react-native'
-
-const { SignalProtocol } = NativeModules
+const { SignalProtocol } = NativeModules;
 
 function bind2String(array) {
   const hex = array.map(key => key.slice(6));
 
   let byteArray = '';
-  for (var i=0; i < hex.length; i++) {
-      byteArray += String.fromCharCode( parseInt(hex[i], 16).toString(16) );
+  for (let i = 0; i < hex.length; i++) {
+    const charCode = parseInt(hex[i], 16);
+    byteArray += String.fromCharCode(charCode);
   }
 
-  var hexarrayout = [];
-  for (var i=0; i<byteArray.length; i++) {
+  let hexarrayout = [];
+for (let i = 0; i < byteArray.length; i++) {
       hexarrayout.push(byteArray.charCodeAt(i).toString(16));
   }
 
@@ -22,7 +21,7 @@ function bind2String(array) {
 
 export default {
   exampleMethod () {
-    return SignalProtocol.exampleMethod()
+    return SignalProtocol.exampleMethod();
   },
 
   generateIdentityKeyPair() {
@@ -40,4 +39,4 @@ export default {
   },
 
   EXAMPLE_CONSTANT: SignalProtocol.EXAMPLE_CONSTANT
-}
+};
