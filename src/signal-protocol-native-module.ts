@@ -38,5 +38,14 @@ export default {
     return SignalProtocol.generateRegistrationId();
   },
 
+  generatePreKeys(startId) {
+    return SignalProtocol.generatePreKeys(startId).then(keys => {
+      return keys.map(keyPair => ({
+        pubKey: bind2String(keyPair.pubKey.split(', ')),
+        privKey: bind2String(keyPair.privKey.split(', ')),
+      }));
+    })
+  },
+
   EXAMPLE_CONSTANT: SignalProtocol.EXAMPLE_CONSTANT
 };

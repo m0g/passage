@@ -25,6 +25,10 @@ export default class Identity {
     //  this.realm.delete(this.realm.objects('Identity'));
     //});
 
+    SignalProtocol.generatePreKeys(100).then(preKeys => {
+      console.log('pre keys', preKeys);
+    })
+
     if (identity) {
       return identity;
     } else {

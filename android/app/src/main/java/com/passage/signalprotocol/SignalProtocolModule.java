@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
+import com.facebook.react.bridge.WritableNativeMap;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.bridge.WritableNativeArray;
 import com.facebook.react.bridge.WritableArray;
@@ -14,11 +15,14 @@ import com.facebook.react.modules.core.DeviceEventManagerModule;
 import org.whispersystems.libsignal.util.KeyHelper;
 import org.whispersystems.libsignal.IdentityKeyPair;
 import org.whispersystems.libsignal.IdentityKey;
+import org.whispersystems.libsignal.state.PreKeyRecord;
 import com.facebook.react.bridge.Promise;
 import org.whispersystems.libsignal.util.Hex;
+import org.whispersystems.libsignal.ecc.ECKeyPair;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.List;
 
 public class SignalProtocolModule extends ReactContextBaseJavaModule {
     public static final String REACT_CLASS = "SignalProtocol";
@@ -71,6 +75,25 @@ public class SignalProtocolModule extends ReactContextBaseJavaModule {
       int key = KeyHelper.generateRegistrationId(false);
 
       promise.resolve(key);
+    }
+
+    @ReactMethod
+    public void generatePreKeys (int startId, final Promise promise) {
+        WritableArray arr = new WritableNativeArray();
+        List<PreKeyRecord> preKeys = KeyHelper.generatePreKeys(startId, 15);
+        int i = 0;
+
+        while (i < preKeys.size()) {
+            ECKeyPair keyPair = preKeys.get(i).getKeyPair();
+            WritableMap preKeyMap = new WritableNativeMap();
+
+            preKeyMap.putString("pubKey", Hex.toString(keyPair.getPublicKey().serialize()));
+            preKeyMap.putString("privKey", Hex.toString(keyPair.getPrivateKey().serialize()));
+            arr.pushMap(preKeyMap);
+            i++;
+        }
+
+        promise.resolve(arr);
     }
 
     private static void emitDeviceEvent(String eventName, @Nullable WritableMap eventData) {
