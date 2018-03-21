@@ -1,7 +1,6 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import QRCode from 'react-native-qrcode';
-//import Realm from 'realm';
 
 import Networking from './networking';
 import Identity from './identity';
@@ -27,7 +26,7 @@ export default class App extends React.Component<State> {
     let state = this.state;
     state.peers = peers;
     this.setState(state);
-  };
+  }
 
   componentDidMount() {
     const networking = new Networking();

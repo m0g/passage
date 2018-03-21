@@ -2,7 +2,7 @@ import Realm from 'realm';
 
 import SignalProtocol from './../SignalProtocolNativeModule';
 
-const IdentitySchema = {
+const identitySchema = {
   name: 'Identity',
   properties: {
     pubKey:     'string',
@@ -11,16 +11,12 @@ const IdentitySchema = {
   }
 };
 
-//interface Id {
-//  pubKey: string;
-//}
-
 export default class Identity {
   private realm: Realm;
 
   constructor() {
     //Realm.deleteFile({schema: [IdentitySchema]});
-    this.realm = new Realm({schema: [IdentitySchema]})
+    this.realm = new Realm({schema: [identitySchema]});
   }
 
   async get() {
