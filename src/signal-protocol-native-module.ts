@@ -2,7 +2,8 @@ import { NativeModules } from 'react-native';
 
 const { SignalProtocol } = NativeModules;
 
-function bind2String(array) {
+function bind2String(key: string) {
+  const array = key.split(', ');
   const hex = array.map(key => key.slice(6));
 
   let byteArray = '';
@@ -12,7 +13,7 @@ function bind2String(array) {
   }
 
   let hexarrayout = [];
-for (let i = 0; i < byteArray.length; i++) {
+  for (let i = 0; i < byteArray.length; i++) {
       hexarrayout.push(byteArray.charCodeAt(i).toString(16));
   }
 
@@ -25,13 +26,10 @@ export default {
   },
 
   generateIdentityKeyPair() {
-    return SignalProtocol.generateIdentityKeyPair().then(arr => {
-      const pubKey = bind2String(arr[0].split(', '));
-      const privKey = bind2String(arr[1].split(', '));
-
-      return { public: pubKey, private: privKey };
-    });
-
+    return SignalProtocol.generateIdentityKeyPair().then(keyPair => ({
+      public: bind2String(keyPair.pubKey),
+      private: bind2String(keyPair.privKey),
+    }));
   },
 
   generateRegistrationId() {
@@ -41,8 +39,8 @@ export default {
   generatePreKeys(startId) {
     return SignalProtocol.generatePreKeys(startId).then(keys => {
       return keys.map(keyPair => ({
-        pubKey: bind2String(keyPair.pubKey.split(', ')),
-        privKey: bind2String(keyPair.privKey.split(', ')),
+        pubKey: bind2String(keyPair.pubKey),
+        privKey: bind2String(keyPair.privKey),
       }));
     })
   },
