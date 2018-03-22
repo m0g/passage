@@ -22,16 +22,8 @@ export default class Identity {
   async get() {
     const identity = this.realm.objects('Identity')[0];
     // this.realm.write(() => {
-    //  this.realm.delete(this.realm.objects('Identity'));
+    //   this.realm.delete(this.realm.objects('Identity'));
     // });
-
-    SignalProtocol.generatePreKeys(100).then(preKeys => {
-      console.log('pre keys', preKeys);
-    });
-
-    SignalProtocol.generateSignedPreKey(identity, 5).then(res => {
-      console.log('signed pre key', res);
-    });
 
     if (identity) {
       return identity;
@@ -50,5 +42,12 @@ export default class Identity {
 
       return this.realm.objects('Identity')[0];
     }
+  }
+
+  async getTempKeys(identityKeys) {
+    const preKeys = await SignalProtocol.generatePreKeys(100);
+    const signedPreKey = await SignalProtocol.generateSignedPreKey(identityKeys, 5);
+
+    console.log('signed keys', preKeys, signedPreKey);
   }
 }

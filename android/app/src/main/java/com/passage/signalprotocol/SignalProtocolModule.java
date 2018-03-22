@@ -74,8 +74,8 @@ public class SignalProtocolModule extends ReactContextBaseJavaModule {
         IdentityKeyPair keyPair = KeyHelper.generateIdentityKeyPair();
         WritableMap keyPairMap = new WritableNativeMap();
 
-        keyPairMap.putString("pubKey", keyPair.getPublicKey().getFingerprint());
-        keyPairMap.putString("privKey", Hex.toString(keyPair.getPrivateKey().serialize()));
+        keyPairMap.putString("pubKey", Hex.toStringCondensed(keyPair.getPublicKey().serialize()));
+        keyPairMap.putString("privKey", Hex.toStringCondensed(keyPair.getPrivateKey().serialize()));
 
         promise.resolve(keyPairMap);
     }
@@ -97,8 +97,8 @@ public class SignalProtocolModule extends ReactContextBaseJavaModule {
             ECKeyPair keyPair = preKeys.get(i).getKeyPair();
             WritableMap preKeyMap = new WritableNativeMap();
 
-            preKeyMap.putString("pubKey", Hex.toString(keyPair.getPublicKey().serialize()));
-            preKeyMap.putString("privKey", Hex.toString(keyPair.getPrivateKey().serialize()));
+            preKeyMap.putString("pubKey", Hex.toStringCondensed(keyPair.getPublicKey().serialize()));
+            preKeyMap.putString("privKey", Hex.toStringCondensed(keyPair.getPrivateKey().serialize()));
             arr.pushMap(preKeyMap);
             i++;
         }
@@ -121,11 +121,11 @@ public class SignalProtocolModule extends ReactContextBaseJavaModule {
         try {
             byte[] privKey = Hex.fromStringCondensed(privKeyHex);
             byte[] pubKey = Hex.fromStringCondensed(pubKeyHex);
-
             if (privKey.length != 32) {
                 promise.resolve(privKey.length);
             } else {
-                promise.resolve(Curve25519.getInstance(BEST).calculateSignature(privKey, pubKey));
+                byte[] sig = Curve25519.getInstance(BEST).calculateSignature(privKey, pubKey);
+                promise.resolve(Hex.toStringCondensed(sig));
             }
         } catch (IOException e) {
             e.printStackTrace();

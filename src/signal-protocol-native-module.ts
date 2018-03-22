@@ -38,10 +38,7 @@ export default {
   },
 
   generateIdentityKeyPair() {
-    return SignalProtocol.generateIdentityKeyPair().then(keyPair => ({
-      pubKey: keyPair.pubKey.slice(0, -2),
-      privKey: keyPair.privKey.slice(0, -2),
-    }));
+    return SignalProtocol.generateIdentityKeyPair();
   },
 
   generateRegistrationId() {
@@ -49,21 +46,18 @@ export default {
   },
 
   generatePreKeys(startId) {
-    return SignalProtocol.generatePreKeys(startId).then(keys => {
-      return keys.map(keypair => ({
-        pubKey: keypair.pubKey.slice(0, -2),
-        privKey: keypair.privKey.slice(0, -2),
-      }));
-    });
+    return SignalProtocol.generatePreKeys(startId);
   },
 
   generateSignedPreKey: function (identityKeyPair, signedKeyId) {
     return this.generateIdentityKeyPair().then(keyPair => {
       console.log('priv', identityKeyPair.privKey);
-      console.log('kp priv', keyPair.privKey.split(', ').length);
       console.log('pub', keyPair.pubKey);
 
-      return SignalProtocol.calculateSignature(identityKeyPair.privKey, keyPair.pubKey)
+      return SignalProtocol.calculateSignature(
+        identityKeyPair.privKey.replace(/\(byte\)0x/g, ''),
+        keyPair.pubKey.replace(/\(byte\)0x/g, ''),
+      )
         .then(function(sig) {
           console.log('SIG', sig);
           return {
