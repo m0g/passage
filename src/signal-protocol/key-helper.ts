@@ -1,7 +1,7 @@
+
 import { NativeModules } from 'react-native';
 
 const { SignalProtocol } = NativeModules;
-
 const toHex = bytesStr => bytesStr.replace(/\(byte\)0x/g, '');
 
 export default {
@@ -21,8 +21,8 @@ export default {
       return preKeys.map(preKey => ({
         pubKey: toHex(preKey.pubKey),
         privKey: toHex(preKey.privKey),
-      }))
-    })
+      }));
+    });
   },
 
   generateSignedPreKey: function (identityKeyPair, signedKeyId) {

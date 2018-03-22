@@ -1,6 +1,6 @@
 import Realm from 'realm';
 
-import SignalProtocol from './signal-protocol-native-module';
+import { KeyHelper } from './signal-protocol';
 
 const identityKeyPairSchema = {
   name: 'IdentityKeyPair',
@@ -29,6 +29,11 @@ const signedPreKeySchema = {
   }
 };
 
+interface KeyPair {
+  pubKey: string;
+  privKey: string;
+}
+
 export default class Identity {
   private realm: Realm;
 
@@ -51,10 +56,10 @@ export default class Identity {
   }
 
   async generateIdentity() {
-    const identityKeyPair = await SignalProtocol.generateIdentityKeyPair();
-    const registrationId = await SignalProtocol.generateRegistrationId();
-    const preKeys = await SignalProtocol.generatePreKeys(100);
-    const signedPreKey = await SignalProtocol.generateSignedPreKey(identityKeyPair, 5);
+    const identityKeyPair = await KeyHelper.generateIdentityKeyPair();
+    const registrationId = await KeyHelper.generateRegistrationId();
+    const preKeys = await KeyHelper.generatePreKeys(100);
+    const signedPreKey = await KeyHelper.generateSignedPreKey(identityKeyPair, 5);
 
     console.log('identity', identityKeyPair, registrationId, preKeys, signedPreKey);
 
@@ -82,6 +87,8 @@ export default class Identity {
   }
 
   getPubKey() {
-    return this.realm.objects('IdentityKeyPair')[0].pubKey;
+    const identityKeyPair = <KeyPair>this.realm.objects('IdentityKeyPair')[0];
+
+    return identityKeyPair.pubKey;
   }
 }
