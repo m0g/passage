@@ -32,13 +32,9 @@ export default class App extends React.Component<State> {
     const networking = new Networking();
     const identity = new Identity();
 
-    identity.get().then((id: { pubKey: string }) => {
-      let state = this.state;
-      state.pubKey = id.pubKey;
-      this.setState(state);
-
-      identity.getTempKeys(id);
-    });
+    let state = this.state;
+    state.pubKey = identity.getPubKey();
+    this.setState(state);
 
     networking.discover();
     networking.onPeersFound = this.onPeerFound.bind(this);

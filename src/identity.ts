@@ -2,8 +2,8 @@ import Realm from 'realm';
 
 import SignalProtocol from './signal-protocol-native-module';
 
-const identitySchema = {
-  name: 'Identity',
+const identityKeyPairSchema = {
+  name: 'IdentityKeyPair',
   properties: {
     pubKey:     'string',
     privKey:     'string',
@@ -11,43 +11,77 @@ const identitySchema = {
   }
 };
 
+const preKeySchema = {
+  name: 'PreKeys',
+  properties: {
+    pubKey: 'string',
+    privKey: 'string',
+  }
+};
+
+const signedPreKeySchema = {
+  name: 'SignedPreKey',
+  properties: {
+    keyId: 'int',
+    pubKey: 'string',
+    privKey: 'string',
+    signature: 'string',
+  }
+};
+
 export default class Identity {
   private realm: Realm;
 
   constructor() {
-    //Realm.deleteFile({schema: [IdentitySchema]});
-    this.realm = new Realm({schema: [identitySchema]});
-  }
+    // Realm.deleteFile({schema: [
+    //   identityKeyPairSchema,
+    //   preKeySchema,
+    //   signedPreKeySchema
+    // ]});
 
-  async get() {
-    const identity = this.realm.objects('Identity')[0];
-    // this.realm.write(() => {
-    //   this.realm.delete(this.realm.objects('Identity'));
-    // });
+    this.realm = new Realm({schema: [
+      identityKeyPairSchema,
+      preKeySchema,
+      signedPreKeySchema
+    ]});
 
-    if (identity) {
-      return identity;
-    } else {
-      const keys = await SignalProtocol.generateIdentityKeyPair();
-      const id = await SignalProtocol.generateRegistrationId();
-      // console.log('KEYS', keys);
-
-      this.realm.write(() => {
-        this.realm.create('Identity', {
-          pubKey: keys.pubKey,
-          privKey: keys.privKey,
-          registrationId: id
-        });
-      });
-
-      return this.realm.objects('Identity')[0];
+    if (!this.realm.objects('IdentityKeyPair')[0]) {
+      this.generateIdentity();
     }
   }
 
-  async getTempKeys(identityKeys) {
+  async generateIdentity() {
+    const identityKeyPair = await SignalProtocol.generateIdentityKeyPair();
+    const registrationId = await SignalProtocol.generateRegistrationId();
     const preKeys = await SignalProtocol.generatePreKeys(100);
-    const signedPreKey = await SignalProtocol.generateSignedPreKey(identityKeys, 5);
+    const signedPreKey = await SignalProtocol.generateSignedPreKey(identityKeyPair, 5);
 
-    console.log('signed keys', preKeys, signedPreKey);
+    console.log('identity', identityKeyPair, registrationId, preKeys, signedPreKey);
+
+    this.realm.write(() => {
+      this.realm.create('IdentityKeyPair', {
+        pubKey: identityKeyPair.pubKey,
+        privKey: identityKeyPair.privKey,
+        registrationId: registrationId
+      });
+
+      preKeys.forEach(preKey => {
+        this.realm.create('PreKeys', {
+          pubKey: preKey.pubKey,
+          privKey: preKey.privKey,
+        });
+      });
+
+      this.realm.create('SignedPreKey', {
+        keyId: signedPreKey.keyId,
+        pubKey: signedPreKey.keyPair.pubKey,
+        privKey: signedPreKey.keyPair.privKey,
+        signature: signedPreKey.signature,
+      });
+    });
+  }
+
+  getPubKey() {
+    return this.realm.objects('IdentityKeyPair')[0].pubKey;
   }
 }
