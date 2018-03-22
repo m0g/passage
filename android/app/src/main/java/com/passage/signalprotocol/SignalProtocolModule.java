@@ -122,7 +122,11 @@ public class SignalProtocolModule extends ReactContextBaseJavaModule {
             byte[] privKey = Hex.fromStringCondensed(privKeyHex);
             byte[] pubKey = Hex.fromStringCondensed(pubKeyHex);
 
-            promise.resolve(Curve25519.getInstance(BEST).calculateSignature(privKey, pubKey));
+            if (privKey.length != 32) {
+                promise.resolve(privKey.length);
+            } else {
+                promise.resolve(Curve25519.getInstance(BEST).calculateSignature(privKey, pubKey));
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -38,11 +38,10 @@ export default {
   },
 
   generateIdentityKeyPair() {
-    return SignalProtocol.generateIdentityKeyPair();
-    // return SignalProtocol.generateIdentityKeyPair().then(keyPair => ({
-    //   public: bind2String(keyPair.pubKey),
-    //   private: bind2String(keyPair.privKey),
-    // }));
+    return SignalProtocol.generateIdentityKeyPair().then(keyPair => ({
+      pubKey: keyPair.pubKey.slice(0, -2),
+      privKey: keyPair.privKey.slice(0, -2),
+    }));
   },
 
   generateRegistrationId() {
@@ -50,28 +49,23 @@ export default {
   },
 
   generatePreKeys(startId) {
-    return SignalProtocol.generatePreKeys(startId);
-    // return SignalProtocol.generatePreKeys(startId).then(keys => {
-    //   return keys.map(keyPair => ({
-    //     pubKey: bind2String(keyPair.pubKey),
-    //     privKey: bind2String(keyPair.privKey),
-    //   }));
-    // });
+    return SignalProtocol.generatePreKeys(startId).then(keys => {
+      return keys.map(keypair => ({
+        pubKey: keypair.pubKey.slice(0, -2),
+        privKey: keypair.privKey.slice(0, -2),
+      }));
+    });
   },
 
   generateSignedPreKey: function (identityKeyPair, signedKeyId) {
-    // const identityKeyPair = {
-    //   privKey: hex2buf(identityKeyPairHex.privKey),
-    //   pubKey: hex2buf(identityKeyPairHex.pubKey),
-    // };
-
-    // Convert identityKeyPair to array buffer
     return this.generateIdentityKeyPair().then(keyPair => {
       console.log('priv', identityKeyPair.privKey);
+      console.log('kp priv', keyPair.privKey.split(', ').length);
       console.log('pub', keyPair.pubKey);
 
       return SignalProtocol.calculateSignature(identityKeyPair.privKey, keyPair.pubKey)
         .then(function(sig) {
+          console.log('SIG', sig);
           return {
             keyId      : signedKeyId,
             keyPair    : keyPair,

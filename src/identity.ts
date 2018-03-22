@@ -31,7 +31,7 @@ export default class Identity {
 
     SignalProtocol.generateSignedPreKey(identity, 5).then(res => {
       console.log('signed pre key', res);
-    })
+    });
 
     if (identity) {
       return identity;
