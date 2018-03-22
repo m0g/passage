@@ -21,12 +21,16 @@ export default class Identity {
 
   async get() {
     const identity = this.realm.objects('Identity')[0];
-    //this.realm.write(() => {
+    // this.realm.write(() => {
     //  this.realm.delete(this.realm.objects('Identity'));
-    //});
+    // });
 
     SignalProtocol.generatePreKeys(100).then(preKeys => {
       console.log('pre keys', preKeys);
+    });
+
+    SignalProtocol.generateSignedPreKey(identity, 5).then(res => {
+      console.log('signed pre key', res);
     })
 
     if (identity) {
@@ -34,11 +38,12 @@ export default class Identity {
     } else {
       const keys = await SignalProtocol.generateIdentityKeyPair();
       const id = await SignalProtocol.generateRegistrationId();
+      // console.log('KEYS', keys);
 
       this.realm.write(() => {
         this.realm.create('Identity', {
-          pubKey: keys.public,
-          privKey: keys.private,
+          pubKey: keys.pubKey,
+          privKey: keys.privKey,
           registrationId: id
         });
       });

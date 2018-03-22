@@ -33,7 +33,7 @@ export default class App extends React.Component<State> {
     const identity = new Identity();
 
     identity.get().then((id: { pubKey: string }) => {
-      console.log('identity get', id);
+      // console.log('identity get', id.pubKey);
       let state = this.state;
       state.pubKey = id.pubKey;
       this.setState(state);

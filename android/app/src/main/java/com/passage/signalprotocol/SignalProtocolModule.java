@@ -11,18 +11,28 @@ import com.facebook.react.bridge.WritableNativeMap;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.bridge.WritableNativeArray;
 import com.facebook.react.bridge.WritableArray;
+import com.facebook.react.bridge.Promise;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
-import org.whispersystems.libsignal.util.KeyHelper;
+
+import org.whispersystems.curve25519.Curve25519;
+import org.whispersystems.curve25519.Curve25519KeyPair;
+
 import org.whispersystems.libsignal.IdentityKeyPair;
 import org.whispersystems.libsignal.IdentityKey;
-import org.whispersystems.libsignal.state.PreKeyRecord;
-import com.facebook.react.bridge.Promise;
-import org.whispersystems.libsignal.util.Hex;
 import org.whispersystems.libsignal.ecc.ECKeyPair;
+import org.whispersystems.libsignal.ecc.Curve;
+import org.whispersystems.libsignal.ecc.ECKeyPair;
+import org.whispersystems.libsignal.util.Hex;
+import org.whispersystems.libsignal.util.KeyHelper;
+import org.whispersystems.libsignal.state.PreKeyRecord;
+import org.whispersystems.libsignal.state.SignedPreKeyRecord;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.List;
+
+import static org.whispersystems.curve25519.Curve25519.BEST;
 
 public class SignalProtocolModule extends ReactContextBaseJavaModule {
     public static final String REACT_CLASS = "SignalProtocol";
@@ -61,13 +71,13 @@ public class SignalProtocolModule extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void generateIdentityKeyPair (final Promise promise) {
-      IdentityKeyPair keyPair = KeyHelper.generateIdentityKeyPair();
-      WritableArray arr = new WritableNativeArray();
+        IdentityKeyPair keyPair = KeyHelper.generateIdentityKeyPair();
+        WritableMap keyPairMap = new WritableNativeMap();
 
-      arr.pushString(keyPair.getPublicKey().getFingerprint());
-      arr.pushString(Hex.toString(keyPair.getPrivateKey().serialize()));
+        keyPairMap.putString("pubKey", keyPair.getPublicKey().getFingerprint());
+        keyPairMap.putString("privKey", Hex.toString(keyPair.getPrivateKey().serialize()));
 
-      promise.resolve(arr);
+        promise.resolve(keyPairMap);
     }
 
     @ReactMethod
@@ -95,6 +105,42 @@ public class SignalProtocolModule extends ReactContextBaseJavaModule {
 
         promise.resolve(arr);
     }
+
+    // public static byte[] hexStringToByteArray(String s) {
+    //     int len = s.length();
+    //     byte[] data = new byte[len / 2];
+    //     for (int i = 0; i < len; i += 2) {
+    //         data[i / 2] = (byte) ((Character.digit(s.charAt(i), 16) << 4)
+    //                             + Character.digit(s.charAt(i+1), 16));
+    //     }
+    //     return data;
+    // }
+
+    @ReactMethod
+    public void calculateSignature (String privKeyHex, String pubKeyHex, final Promise promise) {
+        try {
+            byte[] privKey = Hex.fromStringCondensed(privKeyHex);
+            byte[] pubKey = Hex.fromStringCondensed(pubKeyHex);
+
+            promise.resolve(Curve25519.getInstance(BEST).calculateSignature(privKey, pubKey));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // @ReactMethod
+    // public void generateSignedPreKey (byte[] privKey, byte[] pubKey, int signedPreKeyId, final Promise promise) {
+    //     ECKeyPair keyPair   = Curve.generateKeyPair();
+    //     byte[]    signature = Curve.calculateSignature((ECPrivateKey) privKey, pubKey);
+    //     SignedPreKeyRecord signedPreKey = new SignedPreKeyRecord(signedPreKeyId, System.currentTimeMillis(), keyPair, signature);
+    //     ECKeyPair signedPreKeyPair = signedPreKey.getKeyPair();
+    //     WritableMap keyPairMap = new WritableNativeMap();
+
+    //     keyPairMap.putString("pubKey", signedPreKeyPair.getPublicKey().getFingerprint());
+    //     keyPairMap.putString("privKey", Hex.toString(signedPreKeyPair.getPrivateKey().serialize()));
+
+    //     promise.resolve(keyPairMap);
+    // }
 
     private static void emitDeviceEvent(String eventName, @Nullable WritableMap eventData) {
         // A method for emitting from the native side to JS
